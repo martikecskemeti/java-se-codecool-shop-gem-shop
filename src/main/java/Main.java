@@ -25,6 +25,10 @@ public class Main {
 
     private static boolean isDb = true;     // change this to state!!
 
+    /**
+     * Setting up database or mem Dao instances depending on boolean value
+     */
+
     private static void setupInstances(){
         DaoProvider.setup(Main.isDb);
         productDataStore = DaoProvider.productDao;
@@ -149,6 +153,10 @@ public class Main {
         return jsonObj;
     }
 
+    /**
+     * Populates database with example products.
+     * Generates product instances with different parameters.
+     */
 
     public static void populateData() {
         //setting up a new supplier

@@ -15,6 +15,11 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Controls the rendering of products.
+ * Rendering products based on filter conditions.
+ */
+
 public class ProductController {
     private static ProductDao productDataStore;
     private static ProductCategoryDao productCategoryDataStore;
@@ -26,7 +31,14 @@ public class ProductController {
         if (supplierDataStore == null) supplierDataStore = DaoProvider.supplierDao;
     }
 
-    public static ModelAndView renderProducts(Request req, Response res) throws SQLException {
+    /**
+     * Renders all products from database.
+     * @param req request object
+     * @param res response object
+     * @return populated ModelAndView
+     */
+
+    public static ModelAndView renderProducts(Request req, Response res) {
         checkAndSetupStaticVar();
         Map params = new HashMap<>();
         ShoppingCart currentSession = req.session().attribute("shoppingCart");
@@ -38,7 +50,14 @@ public class ProductController {
         return new ModelAndView(params, "product/index");
     }
 
-    public static ModelAndView renderByCategory(Request req, Response res) throws SQLException {
+    /**
+     * Renders products, based on productsCategory from request params.
+     * @param req request object
+     * @param res response object
+     * @return populated ModelAndView
+     */
+
+    public static ModelAndView renderByCategory(Request req, Response res) {
         checkAndSetupStaticVar();
         int searchedId = Integer.parseInt(req.params(":id"));
         ShoppingCart currentSession = req.session().attribute("shoppingCart");
@@ -51,7 +70,14 @@ public class ProductController {
         return new ModelAndView(params, "product/index");
     }
 
-    public static ModelAndView renderBySupplier(Request req, Response res) throws SQLException {
+    /**
+     * Renders products, based on supplier from request params.
+     * @param req request object
+     * @param res response object
+     * @return populated ModelAndView
+     */
+
+    public static ModelAndView renderBySupplier(Request req, Response res) {
         checkAndSetupStaticVar();
         int searchedId = Integer.parseInt(req.params(":id"));
         Map params = new HashMap<>();
@@ -63,6 +89,14 @@ public class ProductController {
         params.put("shoppingListSize", shoppingListSize);
         return new ModelAndView(params, "product/index");
     }
+
+    /**
+     * Renders shoppingcart page with the given lineitems.
+     * @param req request object
+     * @param res response object
+     * @param shoppingCart object
+     * @return populated ModelAndView
+     */
 
     public static ModelAndView renderToCart(Request req, Response res, ShoppingCart shoppingCart) {
         checkAndSetupStaticVar();
@@ -77,6 +111,13 @@ public class ProductController {
         }
         return new ModelAndView(params, "product/cart");
     }
+
+    /**
+     * Renders checkout page.
+     * @param req request object
+     * @param res response object
+     * @return populated ModelAndView
+     */
 
     public static ModelAndView renderToCheckout(Request req, Response res) {
         checkAndSetupStaticVar();

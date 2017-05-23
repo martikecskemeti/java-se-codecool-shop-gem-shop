@@ -129,6 +129,12 @@ public class OrderDaoJdbc extends JdbcDao implements OrderDao {
         }
     }
 
+    /**
+     * Returns a connection with default data.
+     * @return database Connection
+     * @throws SQLException when {@link DriverManager} fails.
+     */
+
     @Override
     Connection getConnection() throws SQLException {
         DatabaseConnectionData dbConn = new DatabaseConnectionData("connection.properties");

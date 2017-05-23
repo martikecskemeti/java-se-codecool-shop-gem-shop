@@ -12,9 +12,15 @@ import java.util.Currency;
 import java.util.List;
 
 /**
- * Created by keli on 2017.05.15..
+ * Database implementation of {@link ProductDao}.
  */
+
 public class ProductDaoImplJdbc extends JdbcDao implements ProductDao{
+
+    /**
+     * Adds new Product
+     * @param product product to add.
+     */
 
     @Override
     public void add(Product product){
@@ -36,6 +42,12 @@ public class ProductDaoImplJdbc extends JdbcDao implements ProductDao{
         }
 
     }
+
+    /**
+     * finds Product based on id.
+     * @param id of product to find.
+     * @return the found product.
+     */
 
     @Override
     public Product find(int id) {
@@ -65,6 +77,11 @@ public class ProductDaoImplJdbc extends JdbcDao implements ProductDao{
         return null;
     }
 
+    /**
+     * Removes Product based on id.
+     * @param id of product to find
+     */
+
     @Override
     public void remove(int id){
         String query = "DELETE FROM products WHERE id = ?";
@@ -78,6 +95,11 @@ public class ProductDaoImplJdbc extends JdbcDao implements ProductDao{
             System.out.println("Couldn't remove the product");
         }
     }
+
+    /**
+     * Finds all Products.
+     * @return a list of all existing products.
+     */
 
     public List<Product> getAll() {
         ProductCategoryDaoImplJdbc productCategoryDaoImplJdbc = new ProductCategoryDaoImplJdbc();
@@ -105,6 +127,12 @@ public class ProductDaoImplJdbc extends JdbcDao implements ProductDao{
         }
         return productList;
     }
+
+    /**
+     * Finds all Products by a specific supplier.
+     * @param supplier to filter by.
+     * @return a list of products.
+     */
 
     @Override
     public List<Product> getBy(Supplier supplier) {
@@ -134,6 +162,12 @@ public class ProductDaoImplJdbc extends JdbcDao implements ProductDao{
         return productList;
     }
 
+    /**
+     * Finds all Products by a specific category.
+     * @param productCategory to filter by.
+     * @return a list of products.
+     */
+
     @Override
     public List<Product> getBy(ProductCategory productCategory) {
         List<Product> productListByCategory = new ArrayList<>();
@@ -161,6 +195,12 @@ public class ProductDaoImplJdbc extends JdbcDao implements ProductDao{
         }
         return productListByCategory;
     }
+
+    /**
+     * Returns a connection with default data.
+     * @return database Connection
+     * @throws SQLException when {@link DriverManager} fails.
+     */
 
     @Override
     Connection getConnection() throws SQLException {

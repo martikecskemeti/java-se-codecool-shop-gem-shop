@@ -7,11 +7,15 @@ import com.codecool.shop.model.Supplier;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
 /**
- * Created by marti on 2017.05.15..
+ * Database implementation of {@link SupplierDao}.
  */
 public class SupplierDaoJdbc extends JdbcDao implements SupplierDao {
+
+    /**
+     * Adds new supplier
+     * @param supplier to add.
+     */
 
     @Override
     public void add(Supplier supplier) {
@@ -30,6 +34,12 @@ public class SupplierDaoJdbc extends JdbcDao implements SupplierDao {
         }
 
     }
+
+    /**
+     * finds supplier based on id.
+     * @param id of supplier to find.
+     * @return supplier
+     */
 
     @Override
     public Supplier find(int id)  {
@@ -55,6 +65,11 @@ public class SupplierDaoJdbc extends JdbcDao implements SupplierDao {
         }
     }
 
+    /**
+     * Removes supplier based on id.
+     * @param id of supplier to remove.
+     */
+
     @Override
     public void remove(int id) {
 
@@ -71,6 +86,11 @@ public class SupplierDaoJdbc extends JdbcDao implements SupplierDao {
         }
 
     }
+
+    /**
+     * Gets all suppliers.
+     * @return list of all suppliers.
+     */
 
     @Override
     public List<Supplier> getAll() {
@@ -96,6 +116,12 @@ public class SupplierDaoJdbc extends JdbcDao implements SupplierDao {
             return null;
         }
     }
+
+    /**
+     * Returns a connection with default data.
+     * @return database Connection
+     * @throws SQLException when {@link DriverManager} fails.
+     */
 
     @Override
     Connection getConnection() throws SQLException {

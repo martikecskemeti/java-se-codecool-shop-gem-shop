@@ -18,6 +18,10 @@ public class DaoProvider {
         else setupDaoJdbc();
     }
 
+    /**
+     * Creates database DAO-s.
+     */
+
     private static void setupDaoJdbc(){
         productDao = new ProductDaoImplJdbc();
         lineItemDao = new LineItemDaoImplJdbc();
@@ -25,6 +29,10 @@ public class DaoProvider {
         productCategoryDao = new ProductCategoryDaoImplJdbc();
         supplierDao = new SupplierDaoJdbc();
     }
+
+    /**
+     * Creates mem DAO-s.
+     */
 
     private static void setupDaoMem(){
         productDao = ProductDaoMem.getInstance();

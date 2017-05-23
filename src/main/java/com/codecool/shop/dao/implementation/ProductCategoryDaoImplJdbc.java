@@ -10,11 +10,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by eszti on 2017.05.16..
+ * Database implementation of {@link ProductCategoryDao}.
  */
 
 
 public class ProductCategoryDaoImplJdbc extends JdbcDao implements ProductCategoryDao {
+
+    /**
+     * Adds new ProductCategory
+     * @param category the category to add.
+     */
 
     @Override
     public void add(ProductCategory category) {
@@ -35,6 +40,12 @@ public class ProductCategoryDaoImplJdbc extends JdbcDao implements ProductCatego
         }
 
     }
+
+    /**
+     * finds ProductCategory based on id.
+     * @param id of ProductCategory to find.
+     * @return category
+     */
 
     @Override
     public ProductCategory find(int id)  {
@@ -63,6 +74,11 @@ public class ProductCategoryDaoImplJdbc extends JdbcDao implements ProductCatego
         }
     }
 
+    /**
+     * Removes ProductCategory based on id.
+     * @param id of ProductCategory to remove.
+     */
+
     @Override
     public void remove(int id) {
 
@@ -79,6 +95,11 @@ public class ProductCategoryDaoImplJdbc extends JdbcDao implements ProductCatego
         }
 
     }
+
+    /**
+     * Gets all productCategories.
+     * @return list of all categories.
+     */
 
     @Override
     public List<ProductCategory> getAll() {
@@ -107,6 +128,12 @@ public class ProductCategoryDaoImplJdbc extends JdbcDao implements ProductCatego
             return null;
         }
     }
+
+    /**
+     * Returns a connection with default data.
+     * @return database Connection
+     * @throws SQLException when {@link DriverManager} fails.
+     */
 
     @Override
     Connection getConnection() throws SQLException {

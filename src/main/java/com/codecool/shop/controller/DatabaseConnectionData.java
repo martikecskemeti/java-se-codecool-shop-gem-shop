@@ -12,8 +12,9 @@ import java.util.List;
 import java.util.Scanner;
 
 /**
- * Created by eszti on 2017.05.15..
+ * Generates data for database connection.
  */
+
 public class DatabaseConnectionData {
 
     private String filePath = "src/main/resources/";
