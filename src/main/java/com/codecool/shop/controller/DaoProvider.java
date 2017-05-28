@@ -2,6 +2,8 @@ package com.codecool.shop.controller;
 
 import com.codecool.shop.dao.*;
 import com.codecool.shop.dao.implementation.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by keli on 2017.05.18..
@@ -12,10 +14,13 @@ public class DaoProvider {
     public static OrderDao orderDao;
     public static ProductCategoryDao productCategoryDao;
     public static SupplierDao supplierDao;
+    private static final Logger logger = LoggerFactory.getLogger(DaoProvider.class);
 
     public static void setup(boolean isDb) {
-        if (!isDb) setupDaoMem();
-        else setupDaoJdbc();
+        if (!isDb) {setupDaoMem();
+            logger.debug("Creating new DaoMem");}
+        else {setupDaoJdbc();
+            logger.debug("Creating new DaoJdbc");}
     }
 
     private static void setupDaoJdbc(){

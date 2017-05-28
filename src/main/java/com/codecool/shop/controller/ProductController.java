@@ -14,11 +14,14 @@ import spark.ModelAndView;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ProductController {
     private static ProductDao productDataStore;
     private static ProductCategoryDao productCategoryDataStore;
     private static SupplierDao supplierDataStore;
+    private static final Logger logger = LoggerFactory.getLogger(ProductController.class.getSimpleName());
 
     private static void checkAndSetupStaticVar(){
         if (productDataStore == null) productDataStore = DaoProvider.productDao;
@@ -48,6 +51,7 @@ public class ProductController {
         params.put("suppliers", supplierDataStore.getAll());
         params.put("products", productDataStore.getBy(productCategoryDataStore.find(searchedId)));
         params.put("shoppingListSize", shoppingListSize);
+        logger.info("Filtering products by category: {}", productCategoryDataStore.find(searchedId).getName());
         return new ModelAndView(params, "product/index");
     }
 
@@ -61,6 +65,7 @@ public class ProductController {
         params.put("categories", productCategoryDataStore.getAll());
         params.put("products", productDataStore.getBy(supplierDataStore.find(searchedId)));
         params.put("shoppingListSize", shoppingListSize);
+        logger.info("Filtering products by supplier: {}", productDataStore.find(searchedId).getName());
         return new ModelAndView(params, "product/index");
     }
 

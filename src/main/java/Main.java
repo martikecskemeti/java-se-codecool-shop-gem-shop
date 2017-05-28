@@ -4,14 +4,17 @@ import static spark.debug.DebugScreen.enableDebugScreen;
 import com.codecool.shop.controller.DaoProvider;
 import com.codecool.shop.controller.ProductController;
 import com.codecool.shop.dao.*;
-import com.codecool.shop.dao.implementation.*;
 import com.codecool.shop.model.*;
 import spark.Request;
 import spark.Response;
 import spark.template.thymeleaf.ThymeleafTemplateEngine;
 import org.json.simple.JSONObject;
-
 import java.util.List;
+
+
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class Main {
@@ -23,20 +26,43 @@ public class Main {
     private static ShoppingCart shoppingCart = new ShoppingCart();
     private static ProductCategoryDao productCategoryDataStore;
 
+    private static final Logger logger = LoggerFactory.getLogger(Main.class);
+    //static final org.slf4j.Logger logger = LoggerFactory.getLogger(Main.class);
+
+
+
     private static boolean isDb = true;     // change this to state!!
 
     private static void setupInstances(){
+        //System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
+        //final org.slf4j.Logger logger = LoggerFactory.getLogger(Main.class);
         DaoProvider.setup(Main.isDb);
         productDataStore = DaoProvider.productDao;
+        logger.debug("Creating new {}", productDataStore.getClass().getSimpleName());
         lineItemDataStore = DaoProvider.lineItemDao;
+        logger.debug("Creating new {}", lineItemDataStore.getClass().getSimpleName());
         orderDataStore = DaoProvider.orderDao;
+        logger.debug("Creating new {}", orderDataStore.getClass().getSimpleName());
         supplierDataStore = DaoProvider.supplierDao;
+        logger.debug("Creating new {}", supplierDataStore.getClass().getSimpleName());
         productCategoryDataStore = DaoProvider.productCategoryDao;
+        logger.debug("Creating new {}", productCategoryDataStore.getClass().getSimpleName());
     }
 
     public static void main(String[] args) {
+
+        //System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "INFO");
+        //final org.slf4j.Logger logger = LoggerFactory.getLogger(Main.class);
+
         setupInstances();
         populateData();
+
+//        logger.trace("trace");
+//        logger.debug("debug");
+//        logger.info("info");
+//        logger.warn("warning");
+//        logger.error("error");
+
 
         // default server settings
         exception(Exception.class, (e, req, res) -> e.printStackTrace());
@@ -46,18 +72,15 @@ public class Main {
         redirect.get("/", "/index");
 
         before("/index", (req, res) -> {
+            logger.info("Rendering products.");
             req.session().attribute("shoppingCart", shoppingCart);
         });
 
-        // Always start with more specific routes
-        get("/hello", (req, res) -> "Hello World");
-
-        // Always add generic routes to the end
         get("/", ProductController::renderProducts, new ThymeleafTemplateEngine());
 
         // Equivalent with above
         get("/index", (Request req, Response res) -> {
-           return new ThymeleafTemplateEngine().render( ProductController.renderProducts(req, res) );
+            return new ThymeleafTemplateEngine().render( ProductController.renderProducts(req, res) );
         });
 
         get("/index/category/:id", ProductController::renderByCategory, new ThymeleafTemplateEngine());
@@ -71,7 +94,8 @@ public class Main {
             LineItem lineItem = lineItemDataStore.find(Integer.parseInt(req.params(":lineitem-id")));
             lineItem.setQuantity(lineItem.getQuantity() + 1);
             JSONObject jsonObj = CreateLineItemJSONObject(lineItem);
-
+            logger.info("increasing lineitem: {}", lineItem.getProduct().getName());
+            logger.debug("increasing lineitem: {} to {}", lineItem.getProduct().getName(), lineItem.getQuantity());
             res.type("application/json");
             return jsonObj;
         });
@@ -87,11 +111,15 @@ public class Main {
                 jsonObj.put("id", ID);
                 jsonObj.put("totalprice", shoppingCart.getTotalPrice());
                 res.type("application/json");
+                logger.info("Deleting lineitem");
+                logger.debug("Deleting lineitem: {}", lineItem.getProduct().getName());
                 return jsonObj;
             }
             else {
                 JSONObject jsonObj = CreateLineItemJSONObject(lineItem);
                 res.type("application/json");
+                logger.info("Decreasing lineitem: {}", lineItem.getProduct().getName());
+                logger.debug("Decreasing lineitem: {} to {}", lineItem.getProduct().getName(), lineItem.getQuantity());
                 return jsonObj;
             }
         });
@@ -114,14 +142,17 @@ public class Main {
             JSONObject jsonObj = new JSONObject();
             jsonObj.put("numOfLineItems", numOfLineItems);
             res.type("application/json");
+            logger.info("Adding products to cart: {}", product.getName());
             return jsonObj;
         });
 
         get("/cart", (Request req, Response res) -> {
+            logger.info("Rendering shopping cart.");
             return new ThymeleafTemplateEngine().render( ProductController.renderToCart(req, res, shoppingCart) );
         });
 
         get("/checkout", (Request req, Response res) -> {
+            logger.info("Rendering checkout.");
             return new ThymeleafTemplateEngine().render( ProductController.renderToCheckout(req, res) );
         });
 
@@ -133,9 +164,12 @@ public class Main {
             List<LineItem> lineItems = currentSession.getShoppingList();
             Order order = new Order(name, orderAddress, lineItems);
             orderDataStore.add(order);
+            logger.info("Adding new order: {}", order.getName());
+            logger.debug("Adding Address {} to order: {}", order.getAddress(), order.getName());
             return req.queryParams("email");
         });
-            enableDebugScreen();
+
+        enableDebugScreen();
     }
 
 
@@ -152,6 +186,8 @@ public class Main {
 
     public static void populateData() {
         //setting up a new supplier
+
+        logger.info("Populating database");
         Supplier amazon = new Supplier("Amazon", "Digital content and services");
         amazon.setId(1);
         supplierDataStore.add(amazon);
